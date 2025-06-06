@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://www.facebook.com/share/1CBEtSg8dK/?mibextid=wwXIfr" 
+                href="https://www.facebook.com/profile.php?id=61577257131874" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-brand-amber transition-colors"
@@ -140,13 +140,13 @@ const Footer: React.FC = () => {
               <li className="flex items-center">
                 <Phone size={20} className="text-brand-amber mr-2" />
                 <a href="tel:+94123456789" className="text-gray-400 hover:text-brand-amber transition-colors">
-                  +94 12 345 6789
+                  +94 71 3357 493
                 </a>
               </li>
               <li className="flex items-center">
                 <Mail size={20} className="text-brand-amber mr-2" />
-                <a href="mailto:info@lunorlabs.com" className="text-gray-400 hover:text-brand-amber transition-colors">
-                  info@lunorlabs.com
+                <a href="mailto:lunorlabs@gmail.com" className="text-gray-400 hover:text-brand-amber transition-colors">
+                  lunorlabs@gmail.com
                 </a>
               </li>
               <li className="text-gray-400">

@@ -162,7 +162,7 @@ const Header: React.FC = () => {
           <div className="hidden md:block">
             <Button 
               variant="primary"
-              onClick={() => window.open('https://wa.me/1234567890?text=I%20want%20to%20get%20a%20website%20for%20my%20business', '_blank')}
+              onClick={() => window.open('https://wa.me/+94702051901?text=I%20want%20to%20get%20a%20website%20for%20my%20business', '_blank')}
             >
               Get Your Website
             </Button>
@@ -263,7 +263,7 @@ const Header: React.FC = () => {
               <Button 
                 variant="primary"
                 fullWidth
-                onClick={() => window.open('https://wa.me/1234567890?text=I%20want%20to%20get%20a%20website%20for%20my%20business', '_blank')}
+                onClick={() => window.open('https://wa.me/+94702051901?text=I%20want%20to%20get%20a%20website%20for%20my%20business', '_blank')}
               >
                 Get Your Website
               </Button>

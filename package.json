@@ -1,7 +1,7 @@
 {
   "name": "lunor-labs-website",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.10.0",
   "type": "module",
   "homepage": "https://www.lunorlabs.com",
   "scripts": {

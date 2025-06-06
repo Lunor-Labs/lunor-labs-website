@@ -73,7 +73,7 @@ const Benefits: React.FC = () => {
             </div>
             <div className="md:w-1/3 flex justify-center md:justify-end">
               <a 
-                href="https://wa.me/1234567890?text=I%20want%20to%20get%20a%20website%20for%20my%20business" 
+                href="https://wa.me/+94702051901?text=I%20want%20to%20get%20a%20website%20for%20my%20business" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="bg-brand-amber hover:bg-amber-600 text-white font-medium py-3 px-6 rounded-md transition-colors duration-300 inline-flex items-center"

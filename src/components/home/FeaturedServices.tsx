@@ -85,7 +85,7 @@ const FeaturedServices: React.FC = () => {
         <div className="text-center mt-12">
           <Button 
             variant="primary" 
-            onClick={() => window.open('https://wa.me/1234567890?text=I%20want%20to%20get%20a%20website%20for%20my%20business', '_blank')}
+            onClick={() => window.open('https://wa.me/+94702051901?text=I%20want%20to%20get%20a%20website%20for%20my%20business', '_blank')}
           >
             Discuss Your Project
           </Button>

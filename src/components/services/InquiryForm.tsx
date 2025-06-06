@@ -57,7 +57,7 @@ const InquiryForm: React.FC = () => {
     );
     
     // Open WhatsApp with the message
-    window.open(`https://wa.me/1234567890?text=${message}`, '_blank');
+    window.open(`https://wa.me/+94702051901?text=${message}`, '_blank');
     
     // Reset form and show success message
     setFormSubmitted(true);

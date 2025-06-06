@@ -54,7 +54,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
         <Button 
           variant="primary" 
           fullWidth
-          onClick={() => window.open('https://wa.me/1234567890?text=I%20am%20interested%20in%20your%20' + service.title + '%20service', '_blank')}
+          onClick={() => window.open('https://wa.me/+94702051901?text=I%20am%20interested%20in%20your%20' + service.title + '%20service', '_blank')}
           icon={<ChevronRight size={16} />}
         >
           Get Started

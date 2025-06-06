@@ -4,17 +4,17 @@ import { motion } from 'framer-motion';
 
 const ContactInfo: React.FC = () => {
   const contactDetails = [
-    {
+    /*{
       icon: <Phone size={24} className="text-brand-amber" />,
       title: 'Phone',
       details: '+94 12 345 6789',
       link: 'tel:+94123456789'
-    },
+    },*/
     {
       icon: <Mail size={24} className="text-brand-amber" />,
       title: 'Email',
-      details: 'info@lunorlabs.com',
-      link: 'mailto:info@lunorlabs.com'
+      details: 'lunorlabs@gmail.com',
+      link: 'mailto:lunorlabs@gmail.com'
     },
     {
       icon: <MapPin size={24} className="text-brand-amber" />,
@@ -68,7 +68,7 @@ const ContactInfo: React.FC = () => {
         <h4 className="font-medium text-brand-dark dark:text-white mb-4">Connect With Us</h4>
         <div className="flex space-x-4">
           <a 
-            href="https://facebook.com" 
+            href="https://www.facebook.com/profile.php?id=61577257131874" 
             target="_blank" 
             rel="noopener noreferrer"
             className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center hover:bg-brand-amber hover:text-white transition-colors"
