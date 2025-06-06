@@ -77,11 +77,11 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <div className="w-10 h-10 rounded bg-brand-dark dark:bg-white flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-brand-amber relative">
-                <div className="absolute inset-0 m-auto w-3 h-3 rounded-full bg-brand-emerald"></div>
-              </div>
-            </div>
+            <img 
+              src="/Untitled design (1).jpg" 
+              alt="LunorLabs Logo" 
+              className="w-10 h-10 rounded"
+            />
             <span className="ml-2 text-xl font-bold text-brand-dark dark:text-white">
               LunorLabs
             </span>

@@ -13,11 +13,11 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center mb-4">
-              <div className="w-10 h-10 rounded bg-white flex items-center justify-center">
-                <div className="w-6 h-6 border-2 border-brand-amber relative">
-                  <div className="absolute inset-0 m-auto w-3 h-3 rounded-full bg-brand-emerald"></div>
-                </div>
-              </div>
+              <img 
+                src="/Untitled design (1).jpg" 
+                alt="LunorLabs Logo" 
+                className="w-10 h-10 rounded"
+              />
               <span className="ml-2 text-xl font-bold text-white">
                 LunorLabs
               </span>
