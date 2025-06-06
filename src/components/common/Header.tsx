@@ -78,7 +78,7 @@ const Header: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src="/lunor-labs-website/logo.jpg" 
+              src="/logo.jpg" 
               alt="LunorLabs Logo" 
               className="w-10 h-10 rounded"
             />
