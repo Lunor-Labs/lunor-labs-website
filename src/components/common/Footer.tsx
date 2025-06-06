@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center mb-4">
               <img 
-                src="/logo.jpg" 
+                src="/lunor-labs-website/logo.jpg" 
                 alt="LunorLabs Logo" 
                 className="w-10 h-10 rounded"
               />
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://facebook.com" 
+                href="https://www.facebook.com/share/1CBEtSg8dK/?mibextid=wwXIfr" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-brand-amber transition-colors"
