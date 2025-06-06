@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center mb-4">
               <img 
-                src="/Untitled design (1).jpg" 
+                src="/logo.jpg" 
                 alt="LunorLabs Logo" 
                 className="w-10 h-10 rounded"
               />
