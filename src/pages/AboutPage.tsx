@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/common/Layout';
 import PageHeader from '../components/common/PageHeader';
 import Mission from '../components/about/Mission';
-import Team from '../components/about/Team';
+// import Team from '../components/about/Team';
 import Portfolio from '../components/about/Portfolio';
 
 const AboutPage: React.FC = () => {
@@ -15,7 +15,7 @@ const AboutPage: React.FC = () => {
       />
       
       <Mission />
-      <Team />
+            {/* <Team /> */}
       <Portfolio />
     </Layout>
   );
