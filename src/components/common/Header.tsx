@@ -83,7 +83,7 @@ const Header: React.FC = () => {
               className="w-10 h-10 rounded"
             />
             <span className="ml-2 text-xl font-bold text-brand-dark dark:text-white">
-              LunorLabs
+              Lunor Labs
             </span>
           </Link>
           

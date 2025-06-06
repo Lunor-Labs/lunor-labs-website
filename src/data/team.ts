@@ -6,7 +6,7 @@ export const team: TeamMember[] = [
     name: "Dinesh Rajapakse",
     role: "Founder & Lead Developer",
     image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
-    bio: "With over 8 years of experience in web development, Dinesh founded LunorLabs with a mission to make quality websites accessible to Sri Lankan businesses of all sizes."
+    bio: "With over 8 years of experience in web development, Dinesh founded Lunor Labs with a mission to make quality websites accessible to Sri Lankan businesses of all sizes."
   },
   {
     id: 2,

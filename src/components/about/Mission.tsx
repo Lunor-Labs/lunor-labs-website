@@ -36,7 +36,7 @@ const Mission: React.FC = () => {
           >
             <h2 className="text-3xl font-bold mb-6 text-brand-dark dark:text-white">Our Mission</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-              LunorLabs started with a simple goal: to help Sri Lankan entrepreneurs establish their online presence without breaking the bank. We recognized that many small businesses were being priced out of quality web design or locked into expensive monthly contracts.
+              Lunor Labs started with a simple goal: to help Sri Lankan entrepreneurs establish their online presence without breaking the bank. We recognized that many small businesses were being priced out of quality web design or locked into expensive monthly contracts.
             </p>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
               Our mission is to democratize web development by offering affordable, high-quality websites with no recurring hosting fees. We believe that every business, regardless of size, deserves a professional online presence that helps them grow and succeed.

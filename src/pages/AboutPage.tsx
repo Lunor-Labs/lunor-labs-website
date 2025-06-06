@@ -9,8 +9,8 @@ const AboutPage: React.FC = () => {
   return (
     <Layout>
       <PageHeader 
-        title="About LunorLabs" 
-        subtitle="Learn about our story, mission, and the team behind LunorLabs."
+        title="About Lunor Labs" 
+        subtitle="Learn about our story, mission, and the team behind Lunor Labs."
         background="dark"
       />
       

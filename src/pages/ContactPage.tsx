@@ -34,7 +34,7 @@ const ContactPage: React.FC = () => {
               allowFullScreen 
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"
-              title="LunorLabs location"
+              title="Lunor Labs location"
             ></iframe>
           </div>
         </Container>
