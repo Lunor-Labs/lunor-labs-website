@@ -1,10 +1,9 @@
 // filepath: src/utils/notion.ts
 import { Client } from '@notionhq/client';
 
-const NOTION_API_KEY='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'; 
 
-console.log("NOTION_API_KEY:", NOTION_API_KEY); // Log API key (should NOT be undefined)
-const notion = new Client({ auth: NOTION_API_KEY });
+console.log("NOTION_API_KEY:", import.meta.env.NOTION_API_KEY); // Log API key (should NOT be undefined)
+const notion = new Client({ auth: import.meta.env.NOTION_API_KEY });
 
 export async function fetchArticles(databaseId: string) {
   try {
