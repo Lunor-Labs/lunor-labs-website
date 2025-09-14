@@ -25,3 +25,5 @@ dist-ssr
 .env
 
 .bolt
+
+package-lock.json
