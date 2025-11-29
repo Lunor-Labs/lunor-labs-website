@@ -1,44 +1,14 @@
-// src/pages/BlogPage.tsx
 import React, { useEffect, useState } from 'react';
-
 import Layout from '../components/common/Layout';
 import PageHeader from '../components/common/PageHeader';
 import Container from '../components/common/Container';
 import ArticleCard from '../components/blog/ArticleCard';
 import ArticleFilter from '../components/blog/ArticleFilter';
 import { Article } from '../types';
-import { fetchArticles as fetchNotionArticles } from '../utils/notion'; // existing Notion utility
 import { articles as sampleArticles } from '../data/articles';
+import { fetchMediumArticles } from '../utils/mediumRss';
 
-// Define a type for RSS feed items that we'll transform to Article
-type FeedItem = {
-  id?: string;
-  guid?: string;
-  title?: string;
-  link?: string;
-  date?: string;
-  pubDate?: string;
-  excerpt?: string;
-  content?: string;
-  thumbnail?: string;
-  tags?: string[];
-  slug?: string;
-};
 
-const NOTION_DATABASE_ID = '26ea0d7ead1580f99d8e000cd6646b70'; // keep if you use Notion
-
-// Helper function to extract first image from HTML content
-const extractImageFromContent = (content: string): string => {
-  if (!content) return '/api/placeholder/400/250';
-  
-  const imgMatch = content.match(/<img[^>]+src="([^"]+)"/i);
-  if (imgMatch && imgMatch[1]) {
-    return imgMatch[1];
-  }
-  
-  // Fallback placeholder
-  return '/api/placeholder/400/250';
-};
 
 const BlogPage: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -47,34 +17,6 @@ const BlogPage: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastFetched, setLastFetched] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Helper: normalize Notion article shape into our Article type
-  const normalizeNotion = (n: Article): Article => {
-    return {
-      id: n.id || Math.floor(Math.random() * 100000),
-      title: n.title || 'Untitled',
-      excerpt: n.excerpt || '',
-      content: n.content || '',
-      author: n.author || 'Lunor Labs',
-      date: n.date || new Date().toISOString(),
-      image: n.image || '/api/placeholder/400/250',
-      category: n.category || 'General',
-      slug: n.slug || n.title?.toLowerCase().replace(/\s+/g, '-') || 'untitled'
-    };
-  };
-
-  // Helper: normalize feed JSON item into Article
-  const normalizeFeedItem = (i: FeedItem): Article => ({
-    id: Math.floor(Math.random() * 100000),
-    title: i.title || 'Untitled',
-    excerpt: i.excerpt || '',
-    content: i.content || '',
-    author: 'Lunor Labs',
-    date: i.date || i.pubDate || new Date().toISOString(),
-    image: i.thumbnail || '/api/placeholder/400/250',
-    category: 'General',
-    slug: i.slug || (i.title || 'untitled').toLowerCase().replace(/\s+/g, '-')
-  });
 
   // Real-time article fetching function
   const fetchLatestArticles = async (isRefresh = false) => {
@@ -86,130 +28,16 @@ const BlogPage: React.FC = () => {
     setError(null);
 
     try {
-      // Try Notion first
-      try {
-        const notionArticles = await fetchNotionArticles(NOTION_DATABASE_ID);
-        if (Array.isArray(notionArticles) && notionArticles.length > 0) {
-          const normalized = notionArticles.map(normalizeNotion);
-          setArticles(normalized);
-          setFilteredArticles(normalized);
-          setLastFetched(new Date());
-          console.log(`✅ Loaded ${normalized.length} articles from Notion`);
-          return;
-        }
-      } catch (err) {
-        console.warn('Notion fetch failed, trying Medium RSS:', err);
-      }
-
-      // Enhanced Medium RSS fetching with multiple proxies for better reliability
-      const corsProxies = [
-        'https://api.rss2json.com/v1/api.json?rss_url=',
-        'https://api.allorigins.win/get?url=',
-      ];
-
-      let success = false;
-      
-      for (const corsProxy of corsProxies) {
-        try {
-          console.log(`🔄 Trying Medium RSS via: ${corsProxy}`);
-          const mediumRssUrl = 'https://medium.com/feed/@yasith.banula06';
-          
-          let proxyUrl: string;
-          let parseResponse: (json: any) => any[];
-          
-          if (corsProxy.includes('rss2json')) {
-            proxyUrl = `${corsProxy}${encodeURIComponent(mediumRssUrl)}`;
-            parseResponse = (json: any) => json.status === 'ok' ? json.items : [];
-          } else if (corsProxy.includes('allorigins')) {
-            proxyUrl = `${corsProxy}${encodeURIComponent(mediumRssUrl)}`;
-            parseResponse = (json: any) => {
-              try {
-                const rssData = JSON.parse(json.contents);
-                return rssData.items || [];
-              } catch {
-                return [];
-              }
-            };
-          } else {
-            continue; // Skip unknown proxy types
-          }
-          
-          const res = await fetch(proxyUrl, {
-            cache: 'no-cache',
-            headers: {
-              'Accept': 'application/json',
-            }
-          });
-          
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          
-          const json = await res.json();
-          const items = parseResponse(json);
-          
-          if (items && items.length > 0) {
-            const mediumItems = items.map((item: any, index: number) => {
-              const cleanTitle = item.title || `Article ${index + 1}`;
-              const slug = cleanTitle
-                .toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-                .trim();
-              
-              const rawContent = item.content || item.description || '';
-              const cleanExcerpt = item.description?.replace(/<[^>]*>/g, '').substring(0, 300) + '...' || '';
-              
-              return normalizeFeedItem({
-                id: item.guid || `medium-${index}`,
-                title: cleanTitle,
-                link: item.link,
-                date: item.pubDate,
-                excerpt: cleanExcerpt,
-                content: rawContent,
-                thumbnail: item.thumbnail || extractImageFromContent(rawContent),
-                tags: item.categories || [],
-                slug: slug
-              });
-            });
-            
-            setArticles(mediumItems);
-            setFilteredArticles(mediumItems);
-            setLastFetched(new Date());
-            console.log(`✅ Loaded ${mediumItems.length} real-time articles from Medium`);
-            success = true;
-            break;
-          }
-        } catch (err) {
-          console.warn(`❌ Proxy ${corsProxy} failed:`, err);
-          continue;
-        }
-      }
-
-      if (!success) {
-        throw new Error('All Medium RSS sources failed');
-      }
+      const mediumItems = await fetchMediumArticles();
+      setArticles(mediumItems);
+      setFilteredArticles(mediumItems);
+      setLastFetched(new Date());
+      return;
 
     } catch (err) {
-      console.error('❌ Failed to fetch latest articles:', err);
-      
-      // Fallback to local/sample articles
-      try {
-        const res = await fetch('/articles.json', { cache: 'no-cache' });
-        if (res.ok) {
-          const json = await res.json();
-          const items = Array.isArray(json.items) ? json.items : [];
-          const normalized = items.map(normalizeFeedItem);
-          setArticles(normalized);
-          setFilteredArticles(normalized);
-          console.log('📁 Loaded articles from local cache');
-        } else {
-          throw new Error('Local cache unavailable');
-        }
-      } catch {
-        console.log('📝 Using sample articles as final fallback');
-        setArticles(sampleArticles);
-        setFilteredArticles(sampleArticles);
-      }
+      setError('Failed to load articles');
+      setArticles(sampleArticles);
+      setFilteredArticles(sampleArticles);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -221,17 +49,13 @@ const BlogPage: React.FC = () => {
     fetchLatestArticles();
     
     const refreshInterval = setInterval(() => {
-      console.log('🔄 Auto-refreshing articles...');
       fetchLatestArticles(true);
-    }, 5 * 60 * 1000); // 5 minutes
+    }, 5 * 60 * 1000);
     
     return () => clearInterval(refreshInterval);
   }, []);
 
-  // handler for ArticleFilter -> just replace filteredArticles
-  const handleFilter = (next: Article[]) => {
-    setFilteredArticles(next);
-  };
+  const handleFilter = (next: Article[]) => setFilteredArticles(next);
 
   if (error) {
     return (
@@ -285,7 +109,6 @@ const BlogPage: React.FC = () => {
 
       <section className="py-20 bg-white dark:bg-gray-900">
         <Container>
-          {/* Real-time Updates Status */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center space-x-3">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -316,7 +139,6 @@ const BlogPage: React.FC = () => {
             </button>
           </div>
 
-          {/* ArticleFilter expects `articles` and onFilter callback */}
           <ArticleFilter articles={articles} onFilter={handleFilter} />
 
           {filteredArticles.length > 0 ? (
