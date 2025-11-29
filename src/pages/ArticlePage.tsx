@@ -4,37 +4,10 @@ import { Calendar, User, ArrowLeft } from 'lucide-react';
 import Layout from '../components/common/Layout';
 import Container from '../components/common/Container';
 import { Article } from '../types';
-import { fetchArticles as fetchNotionArticles } from '../utils/notion';
 import { articles as sampleArticles } from '../data/articles';
+import { fetchMediumArticles, normalizeFeedItem } from '../utils/mediumRss';
 
-// Define a type for RSS feed items that we'll transform to Article
-type FeedItem = {
-  id?: string;
-  guid?: string;
-  title?: string;
-  link?: string;
-  date?: string;
-  pubDate?: string;
-  excerpt?: string;
-  content?: string;
-  thumbnail?: string;
-  tags?: string[];
-  slug?: string;
-};
 
-const NOTION_DATABASE_ID = '26ea0d7ead1580f99d8e000cd6646b70';
-
-// Helper function to extract first image from HTML content
-const extractImageFromContent = (content: string): string => {
-  if (!content) return '/api/placeholder/400/250';
-  
-  const imgMatch = content.match(/<img[^>]+src="([^"]+)"/i);
-  if (imgMatch && imgMatch[1]) {
-    return imgMatch[1];
-  }
-  
-  return '/api/placeholder/400/250';
-};
 
 const ArticlePage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -42,33 +15,7 @@ const ArticlePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Helper: normalize Notion article shape into our Article type
-  const normalizeNotion = (n: Article): Article => {
-    return {
-      id: n.id || Math.floor(Math.random() * 100000),
-      title: n.title || 'Untitled',
-      excerpt: n.excerpt || '',
-      content: n.content || '',
-      author: n.author || 'Lunor Labs',
-      date: n.date || new Date().toISOString(),
-      image: n.image || '/api/placeholder/400/250',
-      category: n.category || 'General',
-      slug: n.slug || n.title?.toLowerCase().replace(/\s+/g, '-') || 'untitled'
-    };
-  };
 
-  // Helper: normalize feed JSON item into Article
-  const normalizeFeedItem = (i: FeedItem): Article => ({
-    id: Math.floor(Math.random() * 100000),
-    title: i.title || 'Untitled',
-    excerpt: i.excerpt || '',
-    content: i.content || '',
-    author: 'Lunor Labs',
-    date: i.date || i.pubDate || new Date().toISOString(),
-    image: i.thumbnail || '/api/placeholder/400/250',
-    category: 'General',
-    slug: i.slug || (i.title || 'untitled').toLowerCase().replace(/\s+/g, '-')
-  });
 
   useEffect(() => {
     const findArticle = async () => {
@@ -82,98 +29,38 @@ const ArticlePage: React.FC = () => {
       setError(null);
 
       try {
-        // Try Notion first
-        try {
-          const notionArticles = await fetchNotionArticles(NOTION_DATABASE_ID);
-          if (Array.isArray(notionArticles) && notionArticles.length > 0) {
-            const normalized = notionArticles.map(normalizeNotion);
-            const foundArticle = normalized.find(a => a.slug === slug);
-            if (foundArticle) {
-              setArticle(foundArticle);
-              setIsLoading(false);
-              return;
-            }
-          }
-        } catch (err) {
-          console.warn('Notion fetch failed, trying other sources:', err);
+        const mediumItems = await fetchMediumArticles();
+        const mediumArticle = mediumItems.find((a: Article) => a.slug === slug);
+        if (mediumArticle) {
+          setArticle(mediumArticle);
+          setIsLoading(false);
+          return;
         }
-
-        // Try Medium RSS feed
-        try {
-          console.log('Trying Medium RSS feed via CORS proxy...');
-          const corsProxy = 'https://api.rss2json.com/v1/api.json?rss_url=';
-          const mediumRssUrl = 'https://medium.com/feed/@yasith.banula06';
-          const proxyUrl = `${corsProxy}${encodeURIComponent(mediumRssUrl)}`;
-          
-          const res = await fetch(proxyUrl);
-          if (!res.ok) throw new Error(`Failed to fetch Medium RSS (status ${res.status})`);
-          
-          const json = await res.json();
-          if (json.status === 'ok' && Array.isArray(json.items) && json.items.length > 0) {
-            const mediumItems = json.items.map((item: any, index: number) => {
-              const cleanTitle = item.title || `Article ${index + 1}`;
-              const itemSlug = cleanTitle
-                .toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-                .trim();
-              
-              // Clean and preserve content better
-              const rawContent = item.content || item.description || '';
-              const cleanExcerpt = item.description?.replace(/<[^>]*>/g, '').substring(0, 300) + '...' || '';
-              
-              return normalizeFeedItem({
-                id: item.guid || `medium-${index}`,
-                title: cleanTitle,
-                link: item.link,
-                date: item.pubDate,
-                excerpt: cleanExcerpt,
-                content: rawContent, // Keep full content with HTML for better parsing
-                thumbnail: item.thumbnail || extractImageFromContent(rawContent),
-                tags: item.categories || [],
-                slug: itemSlug
-              });
-            });
-            
-            const foundArticle = mediumItems.find((a: Article) => a.slug === slug);
-            if (foundArticle) {
-              setArticle(foundArticle);
-              setIsLoading(false);
-              return;
-            }
-          }
-        } catch (err) {
-          console.error('Failed to load Medium RSS:', err);
-        }
-
+        
         // Try local articles.json
         try {
-          const res = await fetch('/articles.json', { cache: 'no-cache' });
+          const res = await fetch('/articles.json');
           if (res.ok) {
             const json = await res.json();
             const items = Array.isArray(json.items) ? json.items : [];
             const normalized = items.map(normalizeFeedItem);
-            const foundArticle = normalized.find((a: Article) => a.slug === slug);
-            if (foundArticle) {
-              setArticle(foundArticle);
+            const localArticle = normalized.find((a: Article) => a.slug === slug);
+            if (localArticle) {
+              setArticle(localArticle);
               setIsLoading(false);
               return;
             }
           }
-        } catch (err) {
-          console.error('Failed to load articles.json:', err);
-        }
+        } catch {}
 
-        // Finally try sample articles
-        const foundArticle = sampleArticles.find(a => a.slug === slug);
-        if (foundArticle) {
-          setArticle(foundArticle);
+        // Try sample articles
+        const sampleArticle = sampleArticles.find(a => a.slug === slug);;
+        if (sampleArticle) {
+          setArticle(sampleArticle);
         } else {
           setError('Article not found');
         }
-      } catch (err) {
-        console.error('Error finding article:', err);
+      } catch {
         setError('Failed to load article');
       } finally {
         setIsLoading(false);
