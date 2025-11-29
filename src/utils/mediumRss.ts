@@ -29,7 +29,8 @@ export const normalizeFeedItem = (i: FeedItem): Article => ({
   date: i.date || i.pubDate || new Date().toISOString(),
   image: i.thumbnail || extractImageFromContent(i.content || ''),
   category: 'General',
-  slug: i.slug || (i.title || 'untitled').toLowerCase().replace(/\s+/g, '-')
+  slug: i.slug || (i.title || 'untitled').toLowerCase().replace(/\s+/g, '-'),
+  link: i.link
 });
 
 export const fetchMediumArticles = async (): Promise<Article[]> => {

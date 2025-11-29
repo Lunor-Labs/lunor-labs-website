@@ -34,6 +34,7 @@ export interface Article {
   image: string;
   category: string;
   slug: string;
+  link?: string;
 }
 
 export interface PortfolioItem {

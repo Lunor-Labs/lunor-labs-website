@@ -47,13 +47,25 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
           {article.excerpt}
         </p>
         
-        <Link 
-          to={`/blog/${article.slug}`} 
-          className="text-brand-amber hover:text-amber-600 font-medium flex items-center transition-colors mt-2"
-        >
-          Read More
-          <ArrowRight size={16} className="ml-1" />
-        </Link>
+        {article.link ? (
+          <a 
+            href={article.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-amber hover:text-amber-600 font-medium flex items-center transition-colors mt-2"
+          >
+            Read More
+            <ArrowRight size={16} className="ml-1" />
+          </a>
+        ) : (
+          <Link 
+            to={`/blog/${article.slug}`} 
+            className="text-brand-amber hover:text-amber-600 font-medium flex items-center transition-colors mt-2"
+          >
+            Read More
+            <ArrowRight size={16} className="ml-1" />
+          </Link>
+        )}
       </div>
     </Card>
   );
