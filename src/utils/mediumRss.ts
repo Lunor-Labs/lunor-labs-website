@@ -35,7 +35,7 @@ export const normalizeFeedItem = (i: FeedItem): Article => ({
 
 export const fetchMediumArticles = async (): Promise<Article[]> => {
   const corsProxy = 'https://api.rss2json.com/v1/api.json?rss_url=';
-  const mediumRssUrl = 'https://medium.com/feed/@yasith.banula06';
+  const mediumRssUrl = 'https://medium.com/feed/@lunorlabs.tech';
   const timestamp = Date.now();
   const proxyUrl = `${corsProxy}${encodeURIComponent(mediumRssUrl)}&cachebust=${timestamp}`;
   
